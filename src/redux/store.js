@@ -35,10 +35,3 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
-
-// const store = configureStore({
-//   reducer: contactsReducer,
-//   devTools: process.env.NODE_ENV === 'development',
-// });
-
-// export default store;

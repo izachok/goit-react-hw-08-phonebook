@@ -57,6 +57,7 @@ const checkCurrentUser = createAsyncThunk(
       return data;
     } catch (error) {
       // TODO: Добавить обработку ошибки error.message
+      return thunkAPI.rejectWithValue(error.message);
     }
   },
 );

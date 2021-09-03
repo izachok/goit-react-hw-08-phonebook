@@ -37,4 +37,10 @@ const isLoggedIn = createReducer(false, {
   [authOperations.checkCurrentUser.fulfilled]: () => true,
 });
 
-export default combineReducers({ user, token, isLoggedIn });
+const isLogging = createReducer(false, {
+  [authOperations.checkCurrentUser.pending]: () => true,
+  [authOperations.checkCurrentUser.fulfilled]: () => false,
+  [authOperations.checkCurrentUser.rejected]: () => false,
+});
+
+export default combineReducers({ user, token, isLoggedIn, isLogging });
