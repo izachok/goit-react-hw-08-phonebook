@@ -1,6 +1,4 @@
-import './App.css';
-
-import { Redirect, Switch } from 'react-router-dom';
+import { Redirect, Switch, Route } from 'react-router-dom';
 import { Suspense, lazy, useEffect } from 'react';
 import { authOperations, authSelectors } from './redux/auth';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,24 +33,25 @@ export default function App() {
       ) : (
         <>
           <AppBar />
-          <Switch>
-            <Suspense fallback={<LinearProgress />}>
+          <Suspense fallback={<LinearProgress />}>
+            <Switch>
               <PrivateRoute path="/" exact redirectTo="/login">
                 <Redirect to="/contacts" />
               </PrivateRoute>
-
               <PublicRoute path="/login" restricted redirectTo="/contacts">
                 <AuthPage />
               </PublicRoute>
               <PublicRoute path="/register" restricted redirectTo="/contacts">
                 <AuthPage />
               </PublicRoute>
-
               <PrivateRoute path="/contacts">
                 <ContactsPage />
               </PrivateRoute>
-            </Suspense>
-          </Switch>
+              <Route>
+                <Redirect to="/" />
+              </Route>
+            </Switch>
+          </Suspense>
         </>
       )}
     </div>

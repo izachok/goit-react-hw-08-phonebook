@@ -4,24 +4,24 @@ import authOperations from './auth-operations';
 import { combineReducers } from 'redux';
 import { createReducer } from '@reduxjs/toolkit';
 
+const setUser = payload => ({
+  name: payload.user.name,
+  email: payload.user.email,
+});
+
 const user = createReducer(
   { name: null, email: null },
   {
-    [authOperations.register.fulfilled]: (state, { payload }) => ({
-      name: payload.user.name,
-      email: payload.user.email,
-    }),
-    [authOperations.logIn.fulfilled]: (state, { payload }) => ({
-      name: payload.user.name,
-      email: payload.user.email,
+    [authOperations.register.fulfilled]: (state, { payload }) =>
+      setUser(payload),
+    [authOperations.logIn.fulfilled]: (state, { payload }) => setUser(payload),
+    [authOperations.checkCurrentUser.fulfilled]: (state, { payload }) => ({
+      name: payload.name,
+      email: payload.email,
     }),
     [authOperations.logOut.fulfilled]: (state, { payload }) => ({
       name: null,
       email: null,
-    }),
-    [authOperations.checkCurrentUser.fulfilled]: (state, { payload }) => ({
-      name: payload.name,
-      email: payload.email,
     }),
   },
 );

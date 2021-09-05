@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 
-import { Button, LinearProgress } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { Field, Form, Formik } from 'formik';
 
 import React from 'react';

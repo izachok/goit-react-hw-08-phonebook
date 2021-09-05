@@ -34,11 +34,6 @@ export default function ContactEditor({ isOpen, onClose, contact }) {
   };
 
   const addContact = ({ name, number }) => {
-    if (isInContacts(name)) {
-      alert(`${name} is already in contacts`);
-      return;
-    }
-
     dispatch(contactsOperations.addContact({ name, number }));
     onClose();
   };
@@ -48,7 +43,13 @@ export default function ContactEditor({ isOpen, onClose, contact }) {
     dispatch(contactsOperations.updateContact(updatedContact));
   };
 
-  const onSubmit = values => {
+  const onSubmit = (values, { setSubmitting }) => {
+    if (isInContacts(values.name)) {
+      alert(`${values.name} is already in contacts`);
+      setSubmitting(false);
+      return;
+    }
+
     if (contact) {
       updateContact(values);
     } else {
@@ -58,77 +59,75 @@ export default function ContactEditor({ isOpen, onClose, contact }) {
   };
 
   return (
-    <>
-      <Dialog
-        fullWidth
-        maxWidth="xs"
-        open={isOpen}
-        onClose={onClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">
-          {contact ? 'Edit contact' : 'Add contact'}
-        </DialogTitle>
-        <DialogContent>
-          <Formik
-            initialValues={{
-              name: contact ? contact.name : '',
-              number: contact ? contact.number : '',
-            }}
-            validationSchema={Yup.object({
-              name: Yup.string()
-                .matches(
-                  /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/,
-                  "Name can contain only letters, ', - and space. For example: Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan etc.",
-                )
-                .required(),
-              number: Yup.string()
-                .matches(
-                  /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/,
-                  'Phone number should contain only numbers and it also could contain spaces, dash, parenthesis and startts with +',
-                )
-                .required(),
-            })}
-            onSubmit={onSubmit}
-          >
-            {({ isSubmitting }) => (
-              <Form>
-                <Field
-                  name="name"
-                  type="text"
-                  label="Name"
-                  component={TextField}
-                  className={c.field}
-                  fullWidth
-                />
-                <Field
-                  name="number"
-                  type="tel"
-                  label="Phone number"
-                  component={TextField}
-                  className={c.field}
-                  fullWidth
-                />
-                {isSubmitting && <LinearProgress />}
+    <Dialog
+      fullWidth
+      maxWidth="xs"
+      open={isOpen}
+      onClose={onClose}
+      aria-labelledby="form-dialog-title"
+    >
+      <DialogTitle id="form-dialog-title">
+        {contact ? 'Edit contact' : 'Add contact'}
+      </DialogTitle>
+      <DialogContent>
+        <Formik
+          initialValues={{
+            name: contact ? contact.name : '',
+            number: contact ? contact.number : '',
+          }}
+          validationSchema={Yup.object({
+            name: Yup.string()
+              .matches(
+                /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/,
+                "Name can contain only letters, ', - and space. For example: Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan etc.",
+              )
+              .required(),
+            number: Yup.string()
+              .matches(
+                /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/,
+                'Phone number should contain only numbers and it also could contain spaces, dash, parenthesis and startts with +',
+              )
+              .required(),
+          })}
+          onSubmit={onSubmit}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <Field
+                name="name"
+                type="text"
+                label="Name"
+                component={TextField}
+                className={c.field}
+                fullWidth
+              />
+              <Field
+                name="number"
+                type="tel"
+                label="Phone number"
+                component={TextField}
+                className={c.field}
+                fullWidth
+              />
+              {isSubmitting && <LinearProgress />}
 
-                <DialogActions>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    disabled={isSubmitting}
-                    type="submit"
-                  >
-                    Save contact
-                  </Button>
-                  <Button onClick={onClose} color="primary">
-                    Cancel
-                  </Button>
-                </DialogActions>
-              </Form>
-            )}
-          </Formik>
-        </DialogContent>
-      </Dialog>
-    </>
+              <DialogActions>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  disabled={isSubmitting}
+                  type="submit"
+                >
+                  Save contact
+                </Button>
+                <Button onClick={onClose} color="primary">
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Form>
+          )}
+        </Formik>
+      </DialogContent>
+    </Dialog>
   );
 }

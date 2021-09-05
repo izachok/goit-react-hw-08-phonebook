@@ -15,6 +15,7 @@ const items = createReducer([], {
   [addContact.fulfilled]: (state, { payload }) => [payload, ...state],
   [deleteContact.fulfilled]: (state, { payload }) =>
     state.filter(({ id }) => id !== payload),
+
   [updateContact.fulfilled]: (state, { payload }) => {
     return [...state].map(item => {
       if (item.id === payload.id) {

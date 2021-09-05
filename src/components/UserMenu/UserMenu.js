@@ -1,6 +1,7 @@
-import { Avatar, Button, Typography } from '@material-ui/core';
+import { Avatar, IconButton, Typography } from '@material-ui/core';
 import { authOperations, authSelectors } from '../../redux/auth';
 import { useDispatch, useSelector } from 'react-redux';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -13,9 +14,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
   },
-  text: {
-    marginRight: theme.spacing(1),
-  },
 }));
 
 export default function UserMenu() {
@@ -26,15 +24,13 @@ export default function UserMenu() {
   return (
     <div className={c.container}>
       <Avatar className={c.avatar} alt={userName} />
-      <Typography className={c.text}>Hello, {userName}!</Typography>
-      <Button
-        type="button"
-        variant="contained"
-        size="small"
+      <Typography>{userName}</Typography>
+      <IconButton
+        color="inherit"
         onClick={() => dispatch(authOperations.logOut())}
       >
-        Logout
-      </Button>
+        <ExitToAppIcon />
+      </IconButton>
     </div>
   );
 }

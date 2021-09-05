@@ -24,6 +24,10 @@ export default function ContactsPage() {
   const error = useSelector(contactsSelectors.getError);
   const isLoading = useSelector(contactsSelectors.getIsLoading);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
+  const [currentContact, setCurrentContact] = useState(null);
+
+  const shouldOpenDialog = Boolean(isOpenDialog || currentContact);
+
   const c = useStyles();
 
   const handleDialogOpen = () => {
@@ -32,6 +36,11 @@ export default function ContactsPage() {
 
   const handleDialogClose = () => {
     setIsOpenDialog(false);
+    setCurrentContact(null);
+  };
+
+  const handleCurrentContact = contact => {
+    setCurrentContact(contact);
   };
 
   return (
@@ -48,12 +57,16 @@ export default function ContactsPage() {
           />
         )}
         <Filter />
-        <ContactList />
+        <ContactList onEdit={handleCurrentContact} />
         {isLoading && <LinearProgress />}
       </Container>
 
-      {isOpenDialog && (
-        <ContactEditor isOpen={isOpenDialog} onClose={handleDialogClose} />
+      {shouldOpenDialog && (
+        <ContactEditor
+          isOpen={shouldOpenDialog}
+          onClose={handleDialogClose}
+          contact={currentContact}
+        />
       )}
     </>
   );

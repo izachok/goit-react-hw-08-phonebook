@@ -19,7 +19,7 @@ export default function AppBar() {
   return (
     <MUIAppBar position="relative">
       <Toolbar>
-        <Typography className={c.title} variant="h4">
+        <Typography className={c.title} variant="h4" component="h1">
           Phonebook
         </Typography>
         {isLoggedIn && <UserMenu />}

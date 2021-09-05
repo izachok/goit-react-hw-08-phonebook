@@ -10,8 +10,6 @@ export default function ErrorNotification({ action, message }) {
     if (reason === 'clickaway') {
       return;
     }
-
-    // dispatch(contactsActions.resetError());
     dispatch(action());
   };
 
