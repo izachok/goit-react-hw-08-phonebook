@@ -1,24 +1,20 @@
 import './App.css';
 
 import { Redirect, Switch } from 'react-router-dom';
-// import RegisterPage from 'pages/RegisterPage';
 import { Suspense, lazy, useEffect } from 'react';
 import { authOperations, authSelectors } from './redux/auth';
 import { useDispatch, useSelector } from 'react-redux';
 
 import AppBar from 'components/AppBar';
-// import ContactsPage from 'pages/ContactsPage';
-import Loading from 'components/Loading';
-// import LoginPage from 'pages/LoginPage';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { LinearProgress } from '@material-ui/core';
 import PrivateRoute from 'components/PrivateRoute';
 import PublicRoute from 'components/PublicRoute';
 
-const RegisterPage = lazy(() =>
-  import('pages/RegisterPage' /* webpackChunkName: "register-page" */),
+const AuthPage = lazy(() =>
+  import('pages/AuthPage' /* webpackChunkName: "auth-page" */),
 );
-const LoginPage = lazy(() =>
-  import('pages/LoginPage' /* webpackChunkName: "login-page" */),
-);
+
 const ContactsPage = lazy(() =>
   import('pages/ContactsPage' /* webpackChunkName: "contacts-page" */),
 );
@@ -33,22 +29,25 @@ export default function App() {
 
   return (
     <div className="App">
+      <CssBaseline />
       {isLogging ? (
-        <Loading />
+        <LinearProgress />
       ) : (
         <>
           <AppBar />
           <Switch>
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<LinearProgress />}>
               <PrivateRoute path="/" exact redirectTo="/login">
                 <Redirect to="/contacts" />
               </PrivateRoute>
+
               <PublicRoute path="/login" restricted redirectTo="/contacts">
-                <LoginPage />
+                <AuthPage />
               </PublicRoute>
               <PublicRoute path="/register" restricted redirectTo="/contacts">
-                <RegisterPage />
+                <AuthPage />
               </PublicRoute>
+
               <PrivateRoute path="/contacts">
                 <ContactsPage />
               </PrivateRoute>

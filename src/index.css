@@ -19,13 +19,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-h1,
-h2,
-h3 {
-  color: var(--main-dark-color);
+ul {
+  margin: 0;
+  padding: 0;
 }

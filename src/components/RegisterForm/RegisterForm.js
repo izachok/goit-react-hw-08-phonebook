@@ -1,15 +1,24 @@
 import * as Yup from 'yup';
 
-import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { Button, LinearProgress } from '@material-ui/core';
+import { Field, Form, Formik } from 'formik';
 
-import FormButton from '../FormButton/FormButton';
 import React from 'react';
-import { authOperations } from '../../redux/auth';
-import s from './RegisterForm.module.css';
-import { useDispatch } from 'react-redux';
+import { TextField } from 'formik-material-ui';
+import { authOperations, authSelectors } from '../../redux/auth';
+import { makeStyles } from '@material-ui/core/styles';
+import { useDispatch, useSelector } from 'react-redux';
+
+const useStyles = makeStyles(theme => ({
+  field: {
+    marginBottom: theme.spacing(2),
+  },
+}));
 
 export default function RegisterForm() {
+  const isLoading = useSelector(authSelectors.getIsLoading);
   const dispatch = useDispatch();
+  const c = useStyles();
 
   return (
     <div>
@@ -23,40 +32,44 @@ export default function RegisterForm() {
             .max(15, 'Password should be maximum 15 symbols')
             .required('Required'),
         })}
-        onSubmit={(values, { resetForm }) => {
+        onSubmit={(values, { setSubmitting }) => {
           dispatch(authOperations.register(values));
-          resetForm();
+          setSubmitting(false);
         }}
       >
-        <Form className={s.form}>
-          <label className={s.label}>
-            Name:
-            <Field className={s.fieldInput} name="name" type="text" />
-            <ErrorMessage
-              name="name"
-              component="span"
-              className={s.validatorError}
-            />
-          </label>
-          <label className={s.label}>
-            Email:
-            <Field className={s.fieldInput} name="email" type="email" />
-            <ErrorMessage
-              name="email"
-              component="span"
-              className={s.validatorError}
-            />
-          </label>
-          <label className={s.label}>
-            Password:
-            <Field className={s.fieldInput} name="password" type="password" />
-            <ErrorMessage
-              name="password"
-              component="span"
-              className={s.validatorError}
-            />
-          </label>
-          <FormButton type="submit">Register</FormButton>
+        <Form>
+          <Field
+            component={TextField}
+            className={c.field}
+            name="name"
+            type="text"
+            label="User name"
+          />
+          <br />
+          <Field
+            component={TextField}
+            className={c.field}
+            name="email"
+            type="email"
+            label="Email"
+          />
+          <br />
+          <Field
+            component={TextField}
+            className={c.field}
+            name="password"
+            type="password"
+            label="Password"
+          />
+          <br />
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={isLoading}
+            type="submit"
+          >
+            Register
+          </Button>
         </Form>
       </Formik>
     </div>

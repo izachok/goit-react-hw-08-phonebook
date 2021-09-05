@@ -1,43 +1,31 @@
-import axios from 'axios';
+import * as api from '../../services/phonebook-api';
+
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-axios.defaults.baseURL = 'https://connections-api.herokuapp.com';
-
-const token = {
-  set(token) {
-    axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+const register = createAsyncThunk(
+  'auth/register',
+  async (credentials, thunkAPI) => {
+    try {
+      return await api.registerUser(credentials);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
   },
-  remove() {
-    axios.defaults.headers.common.Authorization = '';
-  },
-};
+);
 
-const register = createAsyncThunk('auth/register', async credentials => {
+const logIn = createAsyncThunk('auth/login', async (credentials, thunkAPI) => {
   try {
-    const { data } = await axios.post('/users/signup', credentials);
-    token.set(data.token);
-    return data;
+    return await api.loginUser(credentials);
   } catch (error) {
-    // TODO: Добавить обработку ошибки error.message
+    return thunkAPI.rejectWithValue(error.message);
   }
 });
 
-const logIn = createAsyncThunk('auth/login', async credentials => {
+const logOut = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
   try {
-    const { data } = await axios.post('/users/login', credentials);
-    token.set(data.token);
-    return data;
+    await api.logOutUser();
   } catch (error) {
-    // TODO: Добавить обработку ошибки error.message
-  }
-});
-
-const logOut = createAsyncThunk('auth/logout', async () => {
-  try {
-    await axios.post('/users/logout');
-    token.remove();
-  } catch (error) {
-    // TODO: Добавить обработку ошибки error.message
+    return thunkAPI.rejectWithValue(error.message);
   }
 });
 
@@ -51,12 +39,9 @@ const checkCurrentUser = createAsyncThunk(
       return thunkAPI.rejectWithValue();
     }
 
-    token.set(persistedToken);
     try {
-      const { data } = await axios.get('/users/current');
-      return data;
+      return await api.CheckCurrentUser(persistedToken);
     } catch (error) {
-      // TODO: Добавить обработку ошибки error.message
       return thunkAPI.rejectWithValue(error.message);
     }
   },

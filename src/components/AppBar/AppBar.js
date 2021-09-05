@@ -1,24 +1,29 @@
-import AuthNav from 'components/AuthNav';
-import { NavLink } from 'react-router-dom';
+import { AppBar as MUIAppBar, Toolbar, Typography } from '@material-ui/core';
+
 import React from 'react';
 import UserMenu from 'components/UserMenu';
 import { authSelectors } from '../../redux/auth';
+import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
+
+const useStyles = makeStyles(theme => ({
+  title: {
+    flexGrow: 1,
+  },
+}));
 
 export default function AppBar() {
   const isLoggedIn = useSelector(authSelectors.getIsLoggedIn);
+  const c = useStyles();
 
   return (
-    <header>
-      <h1>Phonebook</h1>
-      {isLoggedIn ? (
-        <>
-          <UserMenu />
-          <NavLink to="/contacts">Contacts</NavLink>
-        </>
-      ) : (
-        <AuthNav />
-      )}
-    </header>
+    <MUIAppBar position="relative">
+      <Toolbar>
+        <Typography className={c.title} variant="h4">
+          Phonebook
+        </Typography>
+        {isLoggedIn && <UserMenu />}
+      </Toolbar>
+    </MUIAppBar>
   );
 }
